@@ -10,16 +10,14 @@ public class Flight extends Transportation {
     private final static double BASE_FLIGHT_PRICE = 400;
 
     public Flight() {
-        super();
-        this.airlineName = "";
+        super("", "", "");
         this.luggageAllowance = 0.0;
     }
 
     public Flight(String companyName, String departureCity,
-                  String arrivalCity, String airlineName, double luggageAllowance) {
+                  String arrivalCity, double luggageAllowance) {
 
         super(companyName, departureCity, arrivalCity);
-        this.airlineName = airlineName;
         this.luggageAllowance = luggageAllowance;
     }
 
@@ -27,14 +25,6 @@ public class Flight extends Transportation {
         super(other);
         this.airlineName = other.airlineName;
         this.luggageAllowance = other.luggageAllowance;
-    }
-
-    public String getAirlineName() {
-        return airlineName;
-    }
-
-    public void setAirlineName(String airlineName) {
-        this.airlineName = airlineName;
     }
 
     public double getLuggageAllowance() {
