@@ -94,4 +94,20 @@ public class Trip {
     public void setClientAssociated(Client clientAssociated) {
         this.clientAssociated = clientAssociated;
     }
+
+    public Transportation getTransportation() {
+        return transportation;
+    }
+
+    public void setTransportation(Transportation transportation) {
+        this.transportation = transportation;
+    }
+
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
+
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
+    }
 }
