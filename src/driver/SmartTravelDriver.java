@@ -3,11 +3,17 @@ package driver;
 import client.Client;
 import travel.*;
 
+import javax.crypto.spec.PSource;
 import java.util.Scanner;
 
 public class SmartTravelDriver {
 
     static Scanner sc = new Scanner(System.in);
+
+    static Client[] clients = new Client[0];
+    static Transportation[] transportations = new Transportation[0];
+    static Accommodation[] accommodations = new Accommodation[0];
+    static Trip[] trips = new Trip[0];
 
     public static void main(String[] args) {
 
@@ -26,60 +32,22 @@ public class SmartTravelDriver {
             //Menu driven interface
             case 1 -> {
 
-                Client[] clients = new Client[0];
-                Transportation[] transportations = new Transportation[0];
-                Accommodation[] accommodations = new Accommodation[0];
-                Trip[] trips = new Trip[0];
+                int choiceMenu;
 
-                int choiceMenu = mainMenu();
+                do {
+                    choiceMenu = mainMenu();
 
-                switch (choiceMenu) {
-                    case 1 -> {
-                        int choice;
-                        do {
-                            System.out.println("-- Client Management --\n");
-                            System.out.println("1. Add a client\n" +
-                                    "2. Edit a client\n" +
-                                    "3. Delete a client\n" +
-                                    "4. List all clients\n" +
-                                    "0. Exit to main menu");
+                    switch (choiceMenu) {
+                        case 1 -> {
+                            System.out.println();
+                            clientManagement();
+                        }
 
-                            choice = sc.nextInt();
-                        } while (choice < 0 || choice > 4);
-
-                        switch (choice) {
-                            case 1 -> {
-                                System.out.print("Enter client First Name: ");
-                                String firstName = sc.nextLine();
-                                System.out.println("Enter client Last Name: ");
-                                String lastName = sc.nextLine();
-                                System.out.println("Enter client email: ");
-                                String email = sc.nextLine();
-
-                                Client client = new Client(firstName, lastName, email);
-
-                                Client[] clientProcess = new Client[clients.length + 1];
-
-                                if (clients.length > 0) {
-                                    for (int i = 0; i < clients.length; i++) {
-                                        clientProcess[i] = clients[i];
-                                    }
-                                }
-
-                                clientProcess[clientProcess.length - 1] = client;
-                                clients = clientProcess;
-
-                                mainMenu();
-                            }
-
-                            case 2 -> {
-                                System.out.println("");
-                            }
-
-
+                        case 0 -> {
+                            System.out.println("Thank you for using our Smart Travel Planner");
                         }
                     }
-                }
+                } while (choiceMenu != 0);
 
             }
 
@@ -125,36 +93,36 @@ public class SmartTravelDriver {
                     //Arrays for objects
 
                 //Clients Array (for 3 clients)
-                Client[] clients = {client1, client2, client3};
+                Client[] clientsPredef = {client1, client2, client3};
 
                 //Trips Array
-                Trip[] trips = {trip1, trip2, trip3};
+                Trip[] tripsPredef = {trip1, trip2, trip3};
 
                 //Transportation Array
-                Transportation[] transportations = {train1, train2, bus1, bus2, flight1, flight2};
+                Transportation[] transportationsPredef = {train1, train2, bus1, bus2, flight1, flight2};
 
                 //Accomodation Array
-                Accommodation[] accommodations = {hotel1, hotel2, hostel1, hostel2};
+                Accommodation[] accommodationsPredef = {hotel1, hotel2, hostel1, hostel2};
 
                 System.out.println("\n      2. Display all created objects\n");
 
                 System.out.println("Clients:");
-                for (Client client: clients) {
+                for (Client client: clientsPredef) {
                     System.out.println("    " + client);
                 }
 
                 System.out.println("\nTrips:");
-                for (Trip trip: trips) {
+                for (Trip trip: tripsPredef) {
                     System.out.println("    " + trip);
                 }
 
                 System.out.println("\nTransportation Options:");
-                for (Transportation transportation: transportations) {
+                for (Transportation transportation: transportationsPredef) {
                     System.out.println("    " + transportation);
                 }
 
                 System.out.println("\nAccomodations");
-                for (Accommodation accommodation: accommodations) {
+                for (Accommodation accommodation: accommodationsPredef) {
                     System.out.println("    " + accommodation);
                 }
 
@@ -167,21 +135,21 @@ public class SmartTravelDriver {
                 System.out.println(train1.equals(train2));
 
                 System.out.println("\n      4. Cost of the Trips\n");
-                for (Trip trip: trips) {
+                for (Trip trip: tripsPredef) {
                     System.out.println(trip.getTripId() + ": " + trip.calculateTotalCost() + "$");
                 }
 
                 System.out.println("\n      5. Most expensive Trip\n" );
-                mostExpensiveTrip(trips);
+                mostExpensiveTrip(tripsPredef);
 
                 System.out.println("\n      6. Deep copie of the Transportation Array\n");
 
                 System.out.println("Making the deep copy...\n");
-                Transportation[] transportationsCopy = copyTransportationArray(transportations);
+                Transportation[] transportationsCopy = copyTransportationArray(transportationsPredef);
 
                 System.out.println("-- Displaying both Arrays --\n");
                 System.out.println("Original");
-                for (Transportation transportation: transportations) {
+                for (Transportation transportation: transportationsPredef) {
                     System.out.println("    " + transportation);
                 }
 
@@ -196,7 +164,7 @@ public class SmartTravelDriver {
                 System.out.println("-- Display both Arrays AFTER MODIFICATION --\n");
 
                 System.out.println("Original");
-                for (Transportation transportation: transportations) {
+                for (Transportation transportation: transportationsPredef) {
                     System.out.println("    " + transportation);
                 }
 
@@ -214,15 +182,18 @@ public class SmartTravelDriver {
         int choice;
 
         do {
+            System.out.println();
             System.out.println("-- Choose one of the operations below -- ");
             System.out.println();
             System.out.println("1. Client Management");
             System.out.println("2. Trip Management");
             System.out.println("3. Transportation Management");
             System.out.println("4. Accomodation Management");
+            System.out.println("0. Exit");
+            System.out.print("> ");
 
             choice = sc.nextInt();
-        } while (choice < 1 || choice > 4);
+        } while (choice < 0 || choice > 4);
 
         return choice;
     }
@@ -257,5 +228,150 @@ public class SmartTravelDriver {
         }
 
         return copy;
+    }
+
+    public static void clientManagement() {
+        int choice;
+        do {
+            System.out.println("-- Client Management --\n");
+            System.out.println("1. Add a client\n" +
+                    "2. Edit a client\n" +
+                    "3. Delete a client\n" +
+                    "4. List all clients\n" +
+                    "0. Exit to main menu");
+            System.out.print("> ");
+
+            choice = sc.nextInt();
+            sc.nextLine();
+        } while (choice < 0 || choice > 4);
+
+        switch (choice) {
+            case 1 -> {
+                addClient();
+            }
+
+            case 2 -> {
+                editClient();
+            }
+
+            case 3-> {
+                deleteClient();
+            }
+
+            case 4 -> {
+                displayClients();
+            }
+
+            case 0 -> {
+            }
+        }
+    }
+
+    public static void addClient() {
+        System.out.print("Enter client First Name: ");
+        String firstName = sc.nextLine();
+        System.out.print("Enter client Last Name: ");
+        String lastName = sc.nextLine();
+        System.out.print("Enter client email: ");
+        String email = sc.nextLine();
+
+        Client client = new Client(firstName, lastName, email);
+
+        Client[] clientProcess = new Client[clients.length + 1];
+
+        if (clients.length > 0) {
+            for (int i = 0; i < clients.length; i++) {
+                clientProcess[i] = clients[i];
+            }
+        }
+
+        clientProcess[clientProcess.length - 1] = client;
+        clients = clientProcess;
+    }
+
+    public static void editClient() {
+        if (clients.length == 0) {
+            System.out.println("There is no client to edit.");
+        } else {
+            int choice;
+
+            do {
+                System.out.println("Which client do you want to edit:");
+                displayClients();
+
+                System.out.println(clients.length + ". Exit");
+
+                choice = sc.nextInt();
+                sc.nextLine();
+            } while (choice < 0 || choice > clients.length);
+
+            if (choice != clients.length) {
+
+                System.out.print("Enter new client First Name > ");
+                String firstName = sc.nextLine();
+                clients[choice].setFirstName(firstName);
+
+                System.out.print("Enter new client Last Name > ");
+                String lastName = sc.nextLine();
+                clients[choice].setLastName(lastName);
+
+                System.out.print("Enter new client Email > ");
+                String email = sc.nextLine();
+                clients[choice].setEmail(email);
+            }
+
+        }
+    }
+
+    public static void deleteClient() {
+        if (clients.length == 0) {
+            System.out.println("There is no client to delete.");
+        } else {
+            int choice;
+
+            do {
+                System.out.println("Which client do you want to delete");
+                displayClients();
+
+                System.out.println(clients.length + ". Exit");
+
+                choice = sc.nextInt();
+            } while (choice < 0 || choice > clients.length);
+
+            if (choice != clients.length) {
+
+                Client[] smallerClient;
+
+                if ((clients.length - 1) == 0) {
+                    smallerClient = new Client[0];
+                } else {
+                    smallerClient = new Client[clients.length - 1];
+                    int compteur = 0;
+
+                    for (int i = 0; i < clients.length; i++) {
+                        if (i != choice) {
+                            smallerClient[compteur] = clients[i];
+                            compteur++;
+                        } else {
+                            i++;
+                            smallerClient[compteur] = clients[i];
+                            i--;
+                        }
+                    }
+                }
+
+                clients = smallerClient;
+            }
+        }
+    }
+
+    public static void displayClients() {
+        if (clients.length != 0) {
+            for (int i = 0; i < clients.length; i++) {
+                System.out.println(i + ". " + clients[i].getClientId() + ", " + clients[i].getFirstName() + " " + clients[i].getLastName());
+            }
+        } else {
+            System.out.println("There is no clients to display.");
+        }
     }
 }
