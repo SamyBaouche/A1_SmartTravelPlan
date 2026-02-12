@@ -43,6 +43,11 @@ public class SmartTravelDriver {
                             clientManagement();
                         }
 
+                        case 5 -> {
+                            System.out.println();
+                            additionalOperations();
+                        }
+
                         case 0 -> {
                             System.out.println("Thank you for using our Smart Travel Planner");
                         }
@@ -189,32 +194,39 @@ public class SmartTravelDriver {
             System.out.println("2. Trip Management");
             System.out.println("3. Transportation Management");
             System.out.println("4. Accomodation Management");
+            System.out.println("5. Additional Operations");
             System.out.println("0. Exit");
             System.out.print("> ");
 
             choice = sc.nextInt();
-        } while (choice < 0 || choice > 4);
+        } while (choice < 0 || choice > 5);
 
         return choice;
     }
 
     public static void mostExpensiveTrip(Trip[] trips) {
-        double topPrice = 0;
 
-        Trip mostExpensiveTrip = new Trip();
+        if (trips.length != 0) {
+            double topPrice = 0;
 
-        for (Trip trip: trips) {
-            double costTrip = trip.calculateTotalCost();
-            if (costTrip > topPrice) {
-                topPrice = costTrip;
-                mostExpensiveTrip = trip;
+            Trip mostExpensiveTrip = new Trip();
+
+            for (Trip trip : trips) {
+                double costTrip = trip.calculateTotalCost();
+                if (costTrip > topPrice) {
+                    topPrice = costTrip;
+                    mostExpensiveTrip = trip;
+                }
             }
-        }
 
-        System.out.println("The most expensive trip is: " + mostExpensiveTrip.getTripId());
+            System.out.println("The most expensive trip is: " + mostExpensiveTrip.getTripId());
+        } else {
+            System.out.println("There are no trips to compare");
+        }
     }
 
     public static Transportation[] copyTransportationArray(Transportation[] original) {
+
         Transportation[] copy = new Transportation[original.length];
 
         for (int i = 0; i < original.length; i++) {
@@ -228,6 +240,23 @@ public class SmartTravelDriver {
         }
 
         return copy;
+
+    }
+
+    public static Accommodation[] copyAccommodationArray(Accommodation[] original) {
+
+        Accommodation[] copy = new Accommodation[original.length];
+
+        for (int i = 0; i < original.length; i++) {
+            if (original[i] instanceof Hotel) {
+                copy[i] = new Hotel((Hotel) original[i]);
+            } else if (original[i] instanceof Hostel) {
+                copy[i] = new Hostel((Hostel) original[i]);
+            }
+        }
+
+        return copy;
+
     }
 
     public static void clientManagement() {
@@ -265,6 +294,58 @@ public class SmartTravelDriver {
             case 0 -> {
             }
         }
+    }
+
+    public static void additionalOperations() {
+
+        int choice;
+
+        do {
+            System.out.println("-- Additional Operations --\n");
+            System.out.println("1. Display the most expensive trip\n" +
+                    "2. Calculate and display the total cost of a trip\n" +
+                    "3. Create a deep copy of the transportation array\n" +
+                    "4. Create a deep copy of the accomodation array");
+            System.out.print("> ");
+
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1 -> {
+                    mostExpensiveTrip(trips);
+                } case 2 -> {
+                    totalCostOfATrip(trips);
+                } case 3 -> {
+
+                    if (transportations.length != 0) {
+                        Transportation[] copyTransportations = copyTransportationArray(transportations);
+
+                        System.out.println("Here is the deep copy of the transportation array");
+                        for (Transportation transportation : copyTransportations) {
+                            System.out.println(transportation);
+                        }
+                    } else {
+                        System.out.println("There are no transportations to copy");
+                    }
+
+                } case 4 -> {
+
+                    if (accommodations.length != 0) {
+                        Accommodation[] copyAccommodations = copyAccommodationArray(accommodations);
+
+                        System.out.println("Here is the deep copy of the accomodation array");
+                        for (Accommodation accommodation : copyAccommodations) {
+                            System.out.println(accommodation);
+                        }
+                    } else {
+                        System.out.println("There are no accomodations to copy");
+                    }
+
+                }
+            }
+
+        } while (choice < 0 || choice > 4);
     }
 
     public static void addClient() {
@@ -372,6 +453,23 @@ public class SmartTravelDriver {
             }
         } else {
             System.out.println("There is no clients to display.");
+        }
+    }
+
+    public static void totalCostOfATrip(Trip[] trips) {
+        if (trips.length == 0) {
+            System.out.println("There is no trip stored.");
+        } else {
+            int choice;
+            do {
+                System.out.println("Which trip do you want to calculate the cost of? :");
+                for (int i = 0; i < trips.length; i++) {
+                    System.out.println((i + 1) + ". " + trips[i].getTripId());
+                }
+                choice = sc.nextInt();
+            } while (choice < 1 || choice > trips.length);
+
+            System.out.println("Total cost of trip [" + trips[choice - 1].getTripId() + "]" + trips[choice -1].calculateTotalCost());
         }
     }
 }
