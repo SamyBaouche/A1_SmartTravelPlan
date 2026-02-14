@@ -3,7 +3,6 @@ package driver;
 import client.Client;
 import travel.*;
 
-import javax.crypto.spec.PSource;
 import java.util.Scanner;
 
 public class SmartTravelDriver {
@@ -17,12 +16,13 @@ public class SmartTravelDriver {
 
     public static void main(String[] args) {
 
+        System.out.println();
         System.out.println("Welcome to SmartTravelPlanner by: \n" +
                 "   Mohammed El Ouaabani and Samy Baouche \n");
 
         System.out.print("What would you like to access: \n" +
-                "   1- menu-driven interface \n" +
-                "   2- predefined testing scenario \n" +
+                "   1- Menu-driven interface \n" +
+                "   2- Predefined testing scenario \n" +
                 "Enter your choice > ");
 
         int optionChoice = sc.nextInt();
@@ -41,6 +41,16 @@ public class SmartTravelDriver {
                         case 1 -> {
                             System.out.println();
                             clientManagement();
+                        }
+
+                        case 2 -> {
+                            System.out.println();
+                            tripManagement();
+                        }
+
+                        case 3 -> {
+                            System.out.println();
+                            transportationManagement();
                         }
 
                         case 5 -> {
@@ -472,4 +482,189 @@ public class SmartTravelDriver {
             System.out.println("Total cost of trip [" + trips[choice - 1].getTripId() + "]" + trips[choice -1].calculateTotalCost());
         }
     }
+
+
+    public static void tripManagement() {
+        int choice;
+        do {
+            System.out.println("-- Trip Management --\n");
+            System.out.println("1. Create Trip\n" +
+                    "2. Edit Trip\n" +
+                    "3. Cancel Trip\n" +
+                    "4. List all Trips\n" +
+                    "5. List Trips for Client\n" +
+                    "0. Exit to main menu");
+            System.out.print("> ");
+
+            choice = sc.nextInt();
+            sc.nextLine();
+        } while (choice < 0 || choice > 5);
+
+        switch (choice) {
+            case 1 -> {
+                createTrip();
+            }
+
+            case 2 -> {
+               // editTripInformation();
+            }
+
+            case 3-> {
+                //cancelTrip();
+            }
+
+            case 4 -> {
+                listAllTrips();
+
+            }
+
+            case 5 -> {
+
+                //listAllTripsSpecificClient();
+            }
+
+            case 0 -> {
+            }
+
+        }
+
+
+    }
+
+    public static void createTrip() {
+
+        int clientsCount = 0;
+
+        System.out.print("Enter your destination: ");
+        String destination = sc.nextLine();
+
+        System.out.print("Enter duration days: ");
+        int daysDuration = sc.nextInt();
+
+        System.out.print("Enter base price: ");
+        double price = sc.nextDouble();
+
+        if (clientsCount == 0) {
+            System.out.println("No client has been created. Please create a new client.");
+        }
+
+
+
+
+
+    }
+
+    public static void listAllTrips() {
+        //  for loop to sout trips
+    }
+
+
+
+
+    public static void transportationManagement() {
+
+        int choice;
+        do {
+            System.out.println("-- Transportation Management --\n");
+            System.out.println("1. Add a transportation option\n" +
+                    "2. Remove a transportation option\n" +
+                    "3. List transportation options by type (Flight, Train, Bus) \n" );
+            System.out.print("> ");
+
+            choice = sc.nextInt();
+            sc.nextLine();
+        } while (choice < 0 || choice > 3);
+
+        switch (choice) {
+            case 1 -> {
+                addTransportation();
+            }
+
+            case 2 -> {
+                //removeTransportation();
+            }
+
+            case 3-> {
+                listTransportationOptions();
+            }
+
+            case 0 -> {
+            }
+        }
+    }
+
+    public static void addTransportation() {
+
+        System.out.println("\nSelect Transportation Type:");
+        System.out.println("1- Flight");
+        System.out.println("2- Train");
+        System.out.println("3- Bus");
+        System.out.print("> ");
+        int type = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter Company Name: ");
+        String company = sc.nextLine();
+        System.out.print("Enter Departure City: ");
+        String departure = sc.nextLine();
+        System.out.print("Enter Arrival City: ");
+        String arrival = sc.nextLine();
+
+        Transportation newTrans = null;
+
+        switch (type) {
+            case 1 -> {
+                System.out.print("Enter Luggage Allowance (kg): ");
+                double luggage = sc.nextDouble();
+                newTrans = new Flight(company, departure, arrival, luggage);
+            }
+            case 2 -> {
+                System.out.print("Enter Train Type: ");
+                String trainType = sc.nextLine();
+                System.out.print("Enter Seat Class (Economy/First Class): ");
+                String seatClass = sc.nextLine();
+                newTrans = new Train(company, departure, arrival, trainType, seatClass);
+            }
+            case 3 -> {
+                System.out.print("Enter Number of Stops: ");
+                int stops = sc.nextInt();
+                newTrans = new Bus(company, departure, arrival, stops);
+            }
+            default -> System.out.println("Invalid type.");
+        }
+
+        if (newTrans != null) {
+
+            Transportation[] temp = new Transportation[transportations.length + 1];
+            for (int i = 0; i < transportations.length; i++) {
+                temp[i] = transportations[i];
+            }
+            temp[temp.length - 1] = newTrans;
+            transportations = temp;
+            System.out.println("Transportation added successfully!");
+        }
+    }
+
+    public static void listTransportationOptions() {
+        if (transportations.length == 0) {
+            System.out.println("No transportation options recorded.");
+            return;
+        }
+
+        System.out.println("\n--- Registered Flights ---");
+        for (Transportation t : transportations) {
+            if (t instanceof Flight) System.out.println(t);
+        }
+
+        System.out.println("\n--- Registered Trains ---");
+        for (Transportation t : transportations) {
+            if (t instanceof Train) System.out.println(t);
+        }
+
+        System.out.println("\n--- Registered Buses ---");
+        for (Transportation t : transportations) {
+            if (t instanceof Bus) System.out.println(t);
+        }
+    }
+
 }
