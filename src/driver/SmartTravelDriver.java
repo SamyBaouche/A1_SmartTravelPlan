@@ -3,6 +3,7 @@ package driver;
 import client.Client;
 import travel.*;
 
+import javax.crypto.spec.PSource;
 import java.util.Scanner;
 
 public class SmartTravelDriver {
@@ -16,13 +17,12 @@ public class SmartTravelDriver {
 
     public static void main(String[] args) {
 
-        System.out.println();
         System.out.println("Welcome to SmartTravelPlanner by: \n" +
                 "   Mohammed El Ouaabani and Samy Baouche \n");
 
         System.out.print("What would you like to access: \n" +
-                "   1- Menu-driven interface \n" +
-                "   2- Predefined testing scenario \n" +
+                "   1- menu-driven interface \n" +
+                "   2- predefined testing scenario \n" +
                 "Enter your choice > ");
 
         int optionChoice = sc.nextInt();
@@ -41,21 +41,6 @@ public class SmartTravelDriver {
                         case 1 -> {
                             System.out.println();
                             clientManagement();
-                        }
-
-                        case 2 -> {
-                            System.out.println();
-                            tripManagement();
-                        }
-
-                        case 3 -> {
-                            System.out.println();
-                            transportationManagement();
-                        }
-
-                        case 5 -> {
-                            System.out.println();
-                            additionalOperations();
                         }
 
                         case 0 -> {
@@ -204,39 +189,32 @@ public class SmartTravelDriver {
             System.out.println("2. Trip Management");
             System.out.println("3. Transportation Management");
             System.out.println("4. Accomodation Management");
-            System.out.println("5. Additional Operations");
             System.out.println("0. Exit");
             System.out.print("> ");
 
             choice = sc.nextInt();
-        } while (choice < 0 || choice > 5);
+        } while (choice < 0 || choice > 4);
 
         return choice;
     }
 
     public static void mostExpensiveTrip(Trip[] trips) {
+        double topPrice = 0;
 
-        if (trips.length != 0) {
-            double topPrice = 0;
+        Trip mostExpensiveTrip = new Trip();
 
-            Trip mostExpensiveTrip = new Trip();
-
-            for (Trip trip : trips) {
-                double costTrip = trip.calculateTotalCost();
-                if (costTrip > topPrice) {
-                    topPrice = costTrip;
-                    mostExpensiveTrip = trip;
-                }
+        for (Trip trip: trips) {
+            double costTrip = trip.calculateTotalCost();
+            if (costTrip > topPrice) {
+                topPrice = costTrip;
+                mostExpensiveTrip = trip;
             }
-
-            System.out.println("The most expensive trip is: " + mostExpensiveTrip.getTripId());
-        } else {
-            System.out.println("There are no trips to compare");
         }
+
+        System.out.println("The most expensive trip is: " + mostExpensiveTrip.getTripId());
     }
 
     public static Transportation[] copyTransportationArray(Transportation[] original) {
-
         Transportation[] copy = new Transportation[original.length];
 
         for (int i = 0; i < original.length; i++) {
@@ -250,23 +228,6 @@ public class SmartTravelDriver {
         }
 
         return copy;
-
-    }
-
-    public static Accommodation[] copyAccommodationArray(Accommodation[] original) {
-
-        Accommodation[] copy = new Accommodation[original.length];
-
-        for (int i = 0; i < original.length; i++) {
-            if (original[i] instanceof Hotel) {
-                copy[i] = new Hotel((Hotel) original[i]);
-            } else if (original[i] instanceof Hostel) {
-                copy[i] = new Hostel((Hostel) original[i]);
-            }
-        }
-
-        return copy;
-
     }
 
     public static void clientManagement() {
@@ -304,58 +265,6 @@ public class SmartTravelDriver {
             case 0 -> {
             }
         }
-    }
-
-    public static void additionalOperations() {
-
-        int choice;
-
-        do {
-            System.out.println("-- Additional Operations --\n");
-            System.out.println("1. Display the most expensive trip\n" +
-                    "2. Calculate and display the total cost of a trip\n" +
-                    "3. Create a deep copy of the transportation array\n" +
-                    "4. Create a deep copy of the accomodation array");
-            System.out.print("> ");
-
-            choice = sc.nextInt();
-            sc.nextLine();
-
-            switch (choice) {
-                case 1 -> {
-                    mostExpensiveTrip(trips);
-                } case 2 -> {
-                    totalCostOfATrip(trips);
-                } case 3 -> {
-
-                    if (transportations.length != 0) {
-                        Transportation[] copyTransportations = copyTransportationArray(transportations);
-
-                        System.out.println("Here is the deep copy of the transportation array");
-                        for (Transportation transportation : copyTransportations) {
-                            System.out.println(transportation);
-                        }
-                    } else {
-                        System.out.println("There are no transportations to copy");
-                    }
-
-                } case 4 -> {
-
-                    if (accommodations.length != 0) {
-                        Accommodation[] copyAccommodations = copyAccommodationArray(accommodations);
-
-                        System.out.println("Here is the deep copy of the accomodation array");
-                        for (Accommodation accommodation : copyAccommodations) {
-                            System.out.println(accommodation);
-                        }
-                    } else {
-                        System.out.println("There are no accomodations to copy");
-                    }
-
-                }
-            }
-
-        } while (choice < 0 || choice > 4);
     }
 
     public static void addClient() {
@@ -465,206 +374,4 @@ public class SmartTravelDriver {
             System.out.println("There is no clients to display.");
         }
     }
-
-    public static void totalCostOfATrip(Trip[] trips) {
-        if (trips.length == 0) {
-            System.out.println("There is no trip stored.");
-        } else {
-            int choice;
-            do {
-                System.out.println("Which trip do you want to calculate the cost of? :");
-                for (int i = 0; i < trips.length; i++) {
-                    System.out.println((i + 1) + ". " + trips[i].getTripId());
-                }
-                choice = sc.nextInt();
-            } while (choice < 1 || choice > trips.length);
-
-            System.out.println("Total cost of trip [" + trips[choice - 1].getTripId() + "]" + trips[choice -1].calculateTotalCost());
-        }
-    }
-
-
-    public static void tripManagement() {
-        int choice;
-        do {
-            System.out.println("-- Trip Management --\n");
-            System.out.println("1. Create Trip\n" +
-                    "2. Edit Trip\n" +
-                    "3. Cancel Trip\n" +
-                    "4. List all Trips\n" +
-                    "5. List Trips for Client\n" +
-                    "0. Exit to main menu");
-            System.out.print("> ");
-
-            choice = sc.nextInt();
-            sc.nextLine();
-        } while (choice < 0 || choice > 5);
-
-        switch (choice) {
-            case 1 -> {
-                createTrip();
-            }
-
-            case 2 -> {
-               // editTripInformation();
-            }
-
-            case 3-> {
-                //cancelTrip();
-            }
-
-            case 4 -> {
-                listAllTrips();
-
-            }
-
-            case 5 -> {
-
-                //listAllTripsSpecificClient();
-            }
-
-            case 0 -> {
-            }
-
-        }
-
-
-    }
-
-    public static void createTrip() {
-
-        int clientsCount = 0;
-
-        System.out.print("Enter your destination: ");
-        String destination = sc.nextLine();
-
-        System.out.print("Enter duration days: ");
-        int daysDuration = sc.nextInt();
-
-        System.out.print("Enter base price: ");
-        double price = sc.nextDouble();
-
-        if (clientsCount == 0) {
-            System.out.println("No client has been created. Please create a new client.");
-        }
-
-
-
-
-
-    }
-
-    public static void listAllTrips() {
-        //  for loop to sout trips
-    }
-
-
-
-
-    public static void transportationManagement() {
-
-        int choice;
-        do {
-            System.out.println("-- Transportation Management --\n");
-            System.out.println("1. Add a transportation option\n" +
-                    "2. Remove a transportation option\n" +
-                    "3. List transportation options by type (Flight, Train, Bus) \n" );
-            System.out.print("> ");
-
-            choice = sc.nextInt();
-            sc.nextLine();
-        } while (choice < 0 || choice > 3);
-
-        switch (choice) {
-            case 1 -> {
-                addTransportation();
-            }
-
-            case 2 -> {
-                //removeTransportation();
-            }
-
-            case 3-> {
-                listTransportationOptions();
-            }
-
-            case 0 -> {
-            }
-        }
-    }
-
-    public static void addTransportation() {
-
-        System.out.println("\nSelect Transportation Type:");
-        System.out.println("1- Flight");
-        System.out.println("2- Train");
-        System.out.println("3- Bus");
-        System.out.print("> ");
-        int type = sc.nextInt();
-        sc.nextLine();
-
-        System.out.print("Enter Company Name: ");
-        String company = sc.nextLine();
-        System.out.print("Enter Departure City: ");
-        String departure = sc.nextLine();
-        System.out.print("Enter Arrival City: ");
-        String arrival = sc.nextLine();
-
-        Transportation newTrans = null;
-
-        switch (type) {
-            case 1 -> {
-                System.out.print("Enter Luggage Allowance (kg): ");
-                double luggage = sc.nextDouble();
-                newTrans = new Flight(company, departure, arrival, luggage);
-            }
-            case 2 -> {
-                System.out.print("Enter Train Type: ");
-                String trainType = sc.nextLine();
-                System.out.print("Enter Seat Class (Economy/First Class): ");
-                String seatClass = sc.nextLine();
-                newTrans = new Train(company, departure, arrival, trainType, seatClass);
-            }
-            case 3 -> {
-                System.out.print("Enter Number of Stops: ");
-                int stops = sc.nextInt();
-                newTrans = new Bus(company, departure, arrival, stops);
-            }
-            default -> System.out.println("Invalid type.");
-        }
-
-        if (newTrans != null) {
-
-            Transportation[] temp = new Transportation[transportations.length + 1];
-            for (int i = 0; i < transportations.length; i++) {
-                temp[i] = transportations[i];
-            }
-            temp[temp.length - 1] = newTrans;
-            transportations = temp;
-            System.out.println("Transportation added successfully!");
-        }
-    }
-
-    public static void listTransportationOptions() {
-        if (transportations.length == 0) {
-            System.out.println("No transportation options recorded.");
-            return;
-        }
-
-        System.out.println("\n--- Registered Flights ---");
-        for (Transportation t : transportations) {
-            if (t instanceof Flight) System.out.println(t);
-        }
-
-        System.out.println("\n--- Registered Trains ---");
-        for (Transportation t : transportations) {
-            if (t instanceof Train) System.out.println(t);
-        }
-
-        System.out.println("\n--- Registered Buses ---");
-        for (Transportation t : transportations) {
-            if (t instanceof Bus) System.out.println(t);
-        }
-    }
-
 }
