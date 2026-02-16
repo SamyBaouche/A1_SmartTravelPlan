@@ -3,6 +3,7 @@ package driver;
 import client.Client;
 import travel.*;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class SmartTravelDriver {
@@ -10,11 +11,14 @@ public class SmartTravelDriver {
     static Scanner sc = new Scanner(System.in);
 
     static Client[] clients = new Client[0];
-    static Transportation[] transportations = new Transportation[0];
-    static Accommodation[] accommodations = new Accommodation[0];
-    static Trip[] trips = new Trip[0];
+    static Transportation[] transportations = new Transportation[1000];
+    static Accommodation[] accommodations = new Accommodation[1000];
+    static Trip[] trips = new Trip[1000];
+    static int accommodationCount = 0;
+    static int tripCount = 0;
+    static int transportationCount = 0;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         System.out.println();
         System.out.println("Welcome to SmartTravelPlanner by: \n" +
@@ -61,6 +65,7 @@ public class SmartTravelDriver {
                             System.out.println();
                             additionalOperations();
                         }
+
 
                         case 0 -> {
                             System.out.println("Thank you for using our Smart Travel Planner");
@@ -140,7 +145,7 @@ public class SmartTravelDriver {
                     System.out.println("    " + transportation);
                 }
 
-                System.out.println("\nAccomodations");
+                System.out.println("\nAccommodations");
                 for (Accommodation accommodation: accommodationsPredef) {
                     System.out.println("    " + accommodation);
                 }
@@ -619,39 +624,29 @@ public class SmartTravelDriver {
         System.out.print("Enter Arrival City: ");
         String arrival = sc.nextLine();
 
-        Transportation newTrans = null;
 
         switch (type) {
             case 1 -> {
                 System.out.print("Enter Luggage Allowance (kg): ");
                 double luggage = sc.nextDouble();
-                newTrans = new Flight(company, departure, arrival, luggage);
+                transportations[transportationCount++] = new Flight(company, departure, arrival, luggage);
             }
             case 2 -> {
                 System.out.print("Enter Train Type: ");
                 String trainType = sc.nextLine();
                 System.out.print("Enter Seat Class (Economy/First Class): ");
                 String seatClass = sc.nextLine();
-                newTrans = new Train(company, departure, arrival, trainType, seatClass);
+                transportations[transportationCount++] = new Train(company,departure,arrival,trainType,seatClass);
             }
             case 3 -> {
                 System.out.print("Enter Number of Stops: ");
                 int stops = sc.nextInt();
-                newTrans = new Bus(company, departure, arrival, stops);
+                transportations[transportationCount++] = new Bus(company, departure, arrival, stops);
             }
             default -> System.out.println("Invalid type.");
         }
 
-        if (newTrans != null) {
-
-            Transportation[] temp = new Transportation[transportations.length + 1];
-            for (int i = 0; i < transportations.length; i++) {
-                temp[i] = transportations[i];
-            }
-            temp[temp.length - 1] = newTrans;
-            transportations = temp;
-            System.out.println("Transportation added successfully!");
-        }
+        System.out.println("Transportation added successfully.");
     }
 
     public static void listTransportationOptions() {
@@ -678,36 +673,61 @@ public class SmartTravelDriver {
     }
 
     public static void removeTransportation() {
-        if (transportations.length == 0) {
-            System.out.println("No transportation options recorded.");
+
+        if (transportationCount == 0) {
+            System.out.println("There are no transportation options to remove.");
             return;
         }
-        System.out.println();
-        System.out.println("Select a Transportation index to remove:");
-        System.out.println();
 
-        for (int i = 0; i < transportations.length; i++) {
-            System.out.println(i  + ". " + transportations[i]);
-        }
-        System.out.println();
+        System.out.println("\nSelect a Transportation type to remove:");
+        System.out.println("1- Flight");
+        System.out.println("2- Train");
+        System.out.println("3- Bus");
         System.out.print("> ");
-        int choiceRemoveTransportation = sc.nextInt();
-        sc.nextLine();
 
-        if (choiceRemoveTransportation < 0 || choiceRemoveTransportation > transportations.length) {
-            Transportation[] trans = new Transportation[transportations.length - 1];
-            int count = 0;
-            for (int i = 0; i < transportations.length; i++) {
-                if (i != choiceRemoveTransportation) {
-                    trans[count++] = transportations[i];
-                }
+        int type = sc.nextInt();
+
+        // Display only chosen type
+        System.out.println("\nAvailable options:");
+
+        int[] indexes = new int[transportationCount];
+        int count = 0;
+
+        for (int i = 0; i < transportationCount; i++) {
+
+            if ((type == 1 && transportations[i] instanceof Flight) ||
+                    (type == 2 && transportations[i] instanceof Train) ||
+                    (type == 3 && transportations[i] instanceof Bus)) {
+
+                System.out.println(count + ". " + transportations[i]);
+                indexes[count] = i;
+                count++;
             }
-            transportations = trans;
-            System.out.println("Removed successfully.");
-        } else {
-            System.out.println("Invalid choice.");
         }
+
+        if (count == 0) {
+            System.out.println("No transportation of this type found.");
+            return;
+        }
+
+        System.out.print("> ");
+        int choice = sc.nextInt();
+
+        if (choice < 0 || choice >= count) {
+            System.out.println("Invalid index.");
+            return;
+        }
+
+        int realIndex = indexes[choice];
+
+        // Swap with last (COMP249 standard)
+        transportations[realIndex] = transportations[transportationCount - 1];
+        transportations[transportationCount - 1] = null;
+        transportationCount--;
+
+        System.out.println("Transportation removed successfully.");
     }
+
 
     public static void accommodationManagement() {
         int choice;
@@ -738,20 +758,87 @@ public class SmartTravelDriver {
 
             case 0 -> {
                 mainMenu();
+
             }
         }
     }
 
     public static void addAccommodation() {
 
+        System.out.println("Choose an accommodation type:");
+        System.out.println("1. Hotel\n2. Hostel");
+
+        int type = sc.nextInt();
+
+        sc.nextLine();
+
+        System.out.print("Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Location: ");
+        String location = sc.nextLine();
+
+        System.out.print("Price/night: ");
+        double price = sc.nextDouble();
+
+        if (type == 1) {
+            System.out.print("Enter Star Rating: ");
+            int stars = sc.nextInt();
+            accommodations[accommodationCount++] = new Hotel(name, location, price, stars);
+        } else {
+            System.out.print("Enter Number of Shared Beds: ");
+            int beds = sc.nextInt();
+            accommodations[accommodationCount++] = new Hostel(name, location, price, beds);
+        }
+
+        System.out.println("Accommodation added successfully.");
     }
 
     public static void removeAccommodation() {
+
+        if (accommodationCount == 0) {
+            System.out.println("There are no accommodations to remove.");
+            return;
+        }
+
+        System.out.println("\nWhich accommodation do you want to remove?");
+
+        for (int i = 0; i < accommodationCount; i++) {
+            System.out.println(i + ". " + accommodations[i]);
+        }
+
+        System.out.print("> ");
+        int index = sc.nextInt();
+
+        if (index < 0 || index >= accommodationCount) {
+            System.out.println("Invalid index.");
+            return;
+        }
+
+        accommodations[index] = accommodations[accommodationCount - 1];
+        accommodations[accommodationCount - 1] = null;
+        accommodationCount--;
+
+        System.out.println("Accommodation removed successfully.");
 
     }
 
     public static void listAccommodationByType() {
 
+        System.out.println();
+        for (Accommodation a : accommodations) {
+            if (a instanceof Hotel) System.out.println(a);
+        }
+
+        for (Accommodation a : accommodations) {
+            if (a instanceof Hostel) System.out.println(a);
+        }
+
+        if  (accommodationCount == 0) {
+            System.out.println("There are no accommodations to list.");
+        }
+
+        }
+
     }
 
-}
