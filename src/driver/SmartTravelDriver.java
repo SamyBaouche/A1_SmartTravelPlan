@@ -13,9 +13,8 @@ public class SmartTravelDriver {
     static Client[] clients = new Client[0];
     static Transportation[] transportations = new Transportation[1000];
     static Accommodation[] accommodations = new Accommodation[1000];
-    static Trip[] trips = new Trip[1000];
+    static Trip[] trips = new Trip[0];
     static int accommodationCount = 0;
-    static int tripCount = 0;
     static int transportationCount = 0;
 
     public static void main(String[] args) throws IOException {
@@ -516,21 +515,19 @@ public class SmartTravelDriver {
             }
 
             case 2 -> {
-               // editTripInformation();
+               editTripInformation();
             }
 
             case 3-> {
-                //cancelTrip();
+                cancelTrip();
             }
 
             case 4 -> {
                 listAllTrips();
-
             }
 
             case 5 -> {
-
-                //listAllTripsSpecificClient();
+                listAllTripsByClient();
             }
 
             case 0 -> {
@@ -544,6 +541,9 @@ public class SmartTravelDriver {
 
     public static void createTrip() {
 
+        Accommodation accomodation = null;
+        Transportation transportation = null;
+
         System.out.print("Enter your destination: ");
         String destination = sc.nextLine();
 
@@ -554,17 +554,18 @@ public class SmartTravelDriver {
         double price = sc.nextDouble();
 
         Client client = new Client();
-        Accommodation accommodation;
-
 
         if (clients.length != 0) {
-            System.out.println("Choose which client you want to associate this trip to");
-            for (int i = 0; i < clients.length; i++) {
-                System.out.println(i + ". " + clients[i]);
-            }
+            int choice;
+            do {
+                System.out.println("Choose which client you want to associate this trip to");
+                for (int i = 0; i < clients.length; i++) {
+                    System.out.println(i + ". " + clients[i]);
+                }
 
-            System.out.print("> ");
-            int choice = sc.nextInt();
+                System.out.print("> ");
+                choice = sc.nextInt();
+            } while (choice < 0 || choice > clients.length - 1);
 
             client = clients[choice];
         } else {
@@ -572,44 +573,187 @@ public class SmartTravelDriver {
         }
 
         if (accommodations.length != 0) {
-            System.out.println("Choose which transportation you want to associate this trip to");
-            for (int i = 0; i < accommodations.length; i++) {
-                System.out.println(i + ". " + accommodations[i]);
-            }
+            int choice;
+            do {
+                System.out.println("Choose which accommodation you want to associate this trip to");
+                for (int i = 0; i < accommodations.length; i++) {
+                    if(accommodations[i] != null)
+                        System.out.println(i + ". " + accommodations[i]);
+                }
 
-            System.out.print("> ");
-            int choice = sc.nextInt();
+                System.out.print("> ");
+                choice = sc.nextInt();
+            } while (choice < 0 || choice > accommodations.length - 1);
 
+            accomodation = accommodations[choice];
 
         } else {
-            System.out.println("No transportation to associate please create one and add it to the trip later");
+            System.out.println("No accommodation to associate please create one and add it to the trip later");
         }
 
         if (transportations.length != 0) {
-            System.out.println("Choose which transportation you want to associate this trip to");
-            for (int i = 0; i < transportations.length; i++) {
-                System.out.println(i + ". " + transportations[i]);
-            }
+            int choice;
+            do {
+                System.out.println("Choose which transportation you want to associate this trip to");
+                for (int i = 0; i < transportations.length; i++) {
+                    if (transportations[i] != null)
+                        System.out.println(i + ". " + transportations[i]);
+                }
 
-            System.out.print("> ");
-            int choice = sc.nextInt();
+                System.out.print("> ");
+                choice = sc.nextInt();
+            } while (choice < 0 || choice > transportations.length - 1);
 
-            Transportation transportation = transportations[choice];
+            transportation = transportations[choice];
         } else {
             System.out.println("No transportation to associate please create one and add it to the trip later");
         }
 
-        //Trip trip = new Trip (destination, daysDuration, price, client, accomodation, transportation);
+        Trip trip = new Trip (destination, daysDuration, price, client, accomodation, transportation);
 
+        Trip[] tripsCopy = new Trip[trips.length + 1];
 
+        for (int i = 0; i < trips.length; i++) {
+            tripsCopy[i] = trips[i];
+        }
+
+        tripsCopy[tripsCopy.length - 1] = trip;
+
+        trips = tripsCopy;
+
+        System.out.println("New trip created successfully");
+    }
+
+    public static void editTripInformation() {
+        if (trips.length != 0) {
+            int choice;
+
+            do {
+                System.out.println("Which trip do you want to edit");
+                for (int i = 0; i < trips.length; i++) {
+                    System.out.println(i + ". " + trips[i]);
+                }
+                choice = sc.nextInt();
+                sc.nextLine();
+            } while (choice < 0 || choice > trips.length - 1);
+
+            System.out.print("Enter the new destination > ");
+            String destination = sc.nextLine();
+
+            System.out.print("Enter the new duration in days > ");
+            int duration = sc.nextInt();
+
+            System.out.print("Enter the new price > ");
+            double price = sc.nextDouble();
+
+            int choiceAccommodation = 0;
+            int choiceTransportation = 0;
+
+            if (accommodations.length != 0) {
+                do {
+                    System.out.println("Choose the new accommodation");
+                       for (int i = 0; i < accommodations.length; i++) {
+                           if (accommodations[i] != null)
+                            System.out.println(i + ". " + accommodations[i]);
+                       }
+                       System.out.print("> ");
+                       choiceAccommodation = sc.nextInt();
+                } while (choiceAccommodation < 0 || choiceAccommodation > accommodations.length - 1);
+            } else {
+                System.out.println("No accommodation registered add one and try again");
+            }
+
+            if (transportations.length != 0) {
+                do {
+                    System.out.println("Choose the new transportation");
+                    for (int i = 0; i < transportations.length; i++) {
+                        if (transportations[i] != null)
+                            System.out.println(i + ". " + transportations[i]);
+                    }
+                    System.out.print("> ");
+                    choiceTransportation = sc.nextInt();
+                } while (choiceTransportation < 0 || choiceTransportation > transportations.length - 1);
+            } else {
+                System.out.println("No transportation registered add on and try again");
+            }
+
+            trips[choice].setDestination(destination);
+            trips[choice].setDurationInDays(duration);
+            trips[choice].setBasePrice(price);
+            trips[choice].setAccommodation(accommodations[choiceAccommodation]);
+            trips[choice].setTransportation(transportations[choiceTransportation]);
+
+            System.out.println("Trip edited successfully");
+
+        } else {
+            System.out.println("No trips to edit");
+        }
+    }
+
+    public static void cancelTrip() {
+        if (trips.length != 0) {
+            int choice;
+            System.out.println("Which trip do you want to cancel");
+            do {
+                for (int i = 0; i < trips.length; i++) {
+                    System.out.println(i + ". " + trips[i]);
+                }
+                System.out.print("> ");
+                choice = sc.nextInt();
+            } while (choice < 0 || choice > trips.length);
+
+            Trip[] tripCopy = new Trip[trips.length - 1];
+
+            if (tripCopy.length != 0) {
+                int tripCopyCompteur = 0;
+                for (int i = 0; i < trips.length; i++) {
+                    if (i != choice) {
+                        tripCopy[tripCopyCompteur] = trips[i];
+                        tripCopyCompteur++;
+                    }
+                }
+
+                trips = tripCopy;
+            } else {
+                trips = null;
+            }
+        } else {
+            System.out.println("No trip to cancel");
+        }
     }
 
     public static void listAllTrips() {
-        //  for loop to sout trips
+        if (trips.length != 0) {
+            for (Trip trip: trips) {
+                System.out.println(trip);
+            }
+        } else {
+            System.out.println("No trips to list");
+        }
     }
 
+    public static void listAllTripsByClient() {
+        if (trips.length != 0) {
+            int choice;
+            do {
+                System.out.println("Choose the specific client");
+                for (int i = 0; i < clients.length; i++) {
+                    System.out.println(i + ". " + clients[i]);
+                }
+                System.out.print("> ");
+                choice = sc.nextInt();
+            } while (choice < 0 || choice > trips.length - 1);
 
+            for (Trip trip: trips) {
+                if (trip.getClientAssociated() == clients[choice]) {
+                    System.out.println(trip);
+                }
+            }
 
+        } else {
+            System.out.println("No trips to list");
+        }
+    }
 
     public static void transportationManagement() {
 
@@ -866,7 +1010,8 @@ public class SmartTravelDriver {
 
         System.out.println();
         for (Accommodation a : accommodations) {
-            if (a instanceof Hotel) System.out.println(a);
+            if (a instanceof Hotel)
+                System.out.println(a);
         }
 
         for (Accommodation a : accommodations) {

@@ -83,7 +83,7 @@ public abstract class  Transportation {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Transportation other = (Transportation) o;
-        return Objects.equals(companyName, other.companyName)
+        return  Objects.equals(companyName, other.companyName)
                 && Objects.equals(departureCity, other.departureCity)
                 && Objects.equals(arrivalCity, other.arrivalCity);
     }
