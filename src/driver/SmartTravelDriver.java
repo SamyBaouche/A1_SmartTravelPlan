@@ -792,13 +792,17 @@ public class SmartTravelDriver {
 
     public static void addTransportation() {
 
-        System.out.println("\nSelect Transportation Type:");
-        System.out.println("1- Flight");
-        System.out.println("2- Train");
-        System.out.println("3- Bus");
-        System.out.print("> ");
-        int type = sc.nextInt();
-        sc.nextLine();
+        int type;
+
+        do {
+            System.out.println("\nSelect Transportation Type:");
+            System.out.println("1- Flight");
+            System.out.println("2- Train");
+            System.out.println("3- Bus");
+            System.out.print("> ");
+            type = sc.nextInt();
+            sc.nextLine();
+        } while (type < 1 || type > 3);
 
         System.out.print("Enter Company Name: ");
         String company = sc.nextLine();
@@ -812,24 +816,39 @@ public class SmartTravelDriver {
             case 1 -> {
                 System.out.print("Enter Luggage Allowance (kg): ");
                 double luggage = sc.nextDouble();
-                transportations[transportationCount++] = new Flight(company, departure, arrival, luggage);
+                Transportation[] transportationCopy = new Transportation[transportations.length + 1];
+                for (int i = 0; i < transportations.length; i++) {
+                    transportationCopy[i] = transportations[i];
+                }
+                transportationCopy[transportationCopy.length - 1] = new Flight(company, departure, arrival, luggage);
+                transportations = transportationCopy;
+                System.out.println("Transportation added successfully.");
             }
             case 2 -> {
                 System.out.print("Enter Train Type: ");
                 String trainType = sc.nextLine();
                 System.out.print("Enter Seat Class (Economy/First Class): ");
                 String seatClass = sc.nextLine();
-                transportations[transportationCount++] = new Train(company,departure,arrival,trainType,seatClass);
+                Transportation[] transportationCopy = new Transportation[transportations.length + 1];
+                for (int i = 0; i < transportations.length; i++) {
+                    transportationCopy[i] = transportations[i];
+                }
+                transportationCopy[transportationCopy.length - 1] = new Train(company,departure,arrival,trainType,seatClass);
+                transportations = transportationCopy;
+                System.out.println("Transportation added successfully.");
             }
             case 3 -> {
                 System.out.print("Enter Number of Stops: ");
                 int stops = sc.nextInt();
-                transportations[transportationCount++] = new Bus(company, departure, arrival, stops);
+                Transportation[] transportationCopy = new Transportation[transportations.length + 1];
+                for (int i = 0; i < transportations.length; i++) {
+                    transportationCopy[i] = transportations[i];
+                }
+                transportationCopy[transportationCopy.length - 1] = new Bus(company, departure, arrival, stops);
+                transportations = transportationCopy;
+                System.out.println("Transportation added successfully.");
             }
-            default -> System.out.println("Invalid type.");
         }
-
-        System.out.println("Transportation added successfully.");
     }
 
     public static void listTransportationOptions() {
@@ -948,12 +967,16 @@ public class SmartTravelDriver {
 
     public static void addAccommodation() {
 
-        System.out.println("Choose an accommodation type:");
-        System.out.println("1. Hotel\n2. Hostel");
+        int type;
 
-        int type = sc.nextInt();
+        do {
+            System.out.println("Choose an accommodation type:");
+            System.out.println("1. Hotel\n2. Hostel");
 
-        sc.nextLine();
+            type = sc.nextInt();
+
+            sc.nextLine();
+        } while (type < 1 || type > 2);
 
         System.out.print("Name: ");
         String name = sc.nextLine();
@@ -964,17 +987,29 @@ public class SmartTravelDriver {
         System.out.print("Price/night: ");
         double price = sc.nextDouble();
 
-        if (type == 1) {
-            System.out.print("Enter Star Rating: ");
-            int stars = sc.nextInt();
-            accommodations[accommodationCount++] = new Hotel(name, location, price, stars);
-        } else {
-            System.out.print("Enter Number of Shared Beds: ");
-            int beds = sc.nextInt();
-            accommodations[accommodationCount++] = new Hostel(name, location, price, beds);
+        switch (type) {
+            case 1 -> {
+                System.out.print("Enter Star Rating: ");
+                int stars = sc.nextInt();
+                Accommodation[] copyAccommodations = new Accommodation[accommodations.length + 1];
+                for (int i = 0; i < accommodations.length; i++) {
+                    copyAccommodations[i] = accommodations[i];
+                }
+                copyAccommodations[copyAccommodations.length - 1] = new Hotel(name, location, price, stars);
+                accommodations = copyAccommodations;
+                System.out.println("Accommodation added successfully.");
+            } case 2 -> {
+                System.out.print("Enter Number of Shared Beds: ");
+                int beds = sc.nextInt();
+                Accommodation[] copyAccommodations = new Accommodation[accommodations.length + 1];
+                for (int i = 0; i < accommodations.length; i++) {
+                    copyAccommodations[i] = accommodations[i];
+                }
+                copyAccommodations[copyAccommodations.length - 1] = new Hostel(name, location, price, beds);
+                accommodations = copyAccommodations;
+                System.out.println("Accommodation added successfully.");
+            }
         }
-
-        System.out.println("Accommodation added successfully.");
     }
 
     public static void removeAccommodation() {
@@ -1008,21 +1043,18 @@ public class SmartTravelDriver {
 
     public static void listAccommodationByType() {
 
-        System.out.println();
-        for (Accommodation a : accommodations) {
-            if (a instanceof Hotel)
-                System.out.println(a);
-        }
+        if (accommodations.length != 0) {
+            for (Accommodation a : accommodations) {
+                if (a instanceof Hotel)
+                    System.out.println(a);
+            }
 
-        for (Accommodation a : accommodations) {
-            if (a instanceof Hostel) System.out.println(a);
-        }
-
-        if  (accommodationCount == 0) {
+            for (Accommodation a : accommodations) {
+                if (a instanceof Hostel) System.out.println(a);
+            }
+        } else {
             System.out.println("There are no accommodations to list.");
         }
-
-        }
-
     }
+}
 
