@@ -2,18 +2,39 @@ package travel;
 
 import java.util.Objects;
 
+/**
+ * The Flight class represents an air transportation.
+ * It extends the Transportation class and adds flight-specific attributes
+ * such as airline name and luggage allowance.
+ */
+
 public class Flight extends Transportation {
 
+    // Name of the airline operating the flight
     private String airlineName;
+
+    // Maximum luggage weight allowed (in kg)
     private double luggageAllowance;
 
     private final static double BASE_FLIGHT_PRICE = 400;
 
+    /**
+     * Default constructor.
+     * Initializes empty transportation data and sets luggage allowance to 0.
+     */
     public Flight() {
         super("", "", "");
         this.luggageAllowance = 0.0;
     }
 
+    /**
+     * Parameterized constructor.
+     *
+     * @param companyName      Name of the airline company
+     * @param departureCity    City of departure
+     * @param arrivalCity      City of arrival
+     * @param luggageAllowance Allowed luggage weight (kg)
+     */
     public Flight(String companyName, String departureCity,
                   String arrivalCity, double luggageAllowance) {
 
@@ -21,6 +42,11 @@ public class Flight extends Transportation {
         this.luggageAllowance = luggageAllowance;
     }
 
+    /**
+     * Copy constructor.
+     *
+     * @param other Flight object to copy
+     */
     public Flight(Flight other) {
         super(other);
         this.airlineName = other.airlineName;
@@ -35,6 +61,11 @@ public class Flight extends Transportation {
         this.luggageAllowance = luggageAllowance;
     }
 
+    /**
+     * Returns a string representation of the Flight object.
+     *
+     * @return formatted string describing the flight
+     */
     @Override
     public String toString() {
         return "Flight [" + super.toString() +
@@ -42,6 +73,16 @@ public class Flight extends Transportation {
                 ", Luggage: " + luggageAllowance + "kg]";
     }
 
+    /**
+     * Compares this Flight object to another object for equality.
+     * Two flights are equal if:
+     * - They are of the same class
+     * - Their parent attributes are equal
+     * - Their airline name and luggage allowance are equal
+     *
+     * @param o object to compare
+     * @return true if objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
