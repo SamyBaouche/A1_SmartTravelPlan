@@ -2,6 +2,10 @@ package client;
 
 import java.util.Objects;
 
+/**
+ * The Client class represents a customer in the travel system.
+ * Each client has a unique ID, a first name, a last name, and an email.
+ */
 public class Client {
 
     private String clientId;
@@ -11,6 +15,10 @@ public class Client {
 
     private static int idCounter = 1001;
 
+    /**
+     * Default constructor.
+     * Creates a client with empty fields and an auto-generated ID.
+     */
 
     public Client() {
         this.clientId = "C" + idCounter;
@@ -20,6 +28,12 @@ public class Client {
         this.lastName = "";
         this.email = "";
     }
+
+    /**
+     * Parameterized constructor.
+     * Creates a client with provided personal information
+     * and an auto-generated ID.
+     */
 
     public Client(String firstName,
                   String lastName, String email) {
@@ -32,6 +46,11 @@ public class Client {
         this.email = email;
     }
 
+    /**
+     * Copy constructor.
+     * Creates a new Client object based on another Client.
+     * A new unique ID is generated.
+     */
     public Client (Client other) {
         this.clientId = "C" + idCounter;
         idCounter++;
@@ -42,6 +61,7 @@ public class Client {
 
     }
 
+    // Getters and Setters
     public String getClientId() {
         return clientId;
     }
@@ -74,6 +94,9 @@ public class Client {
         this.email = email;
     }
 
+    /**
+     * Returns a formatted string representation of the Client object.
+     */
     @Override
     public String toString() {
         return "Client Info: " +
@@ -82,6 +105,10 @@ public class Client {
                 ", Email: " + email + "]";
     }
 
+    /**
+     * Overrides the equals method to compare two Client objects.
+     * Two clients are considered equal if all their attributes are equal.
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

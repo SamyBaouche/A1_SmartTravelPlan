@@ -6,13 +6,17 @@ import travel.*;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * SmartTravelDriver
+ *
+ * Main driver class for Smart Travel Planner application.
+ * Handles user interaction via menu or predefined scenario.
+ */
 public class SmartTravelDriver {
 
     static Scanner sc = new Scanner(System.in);
 
     static Client[] clients = new Client[0];
-    //static Transportation[] transportations = new Transportation[0];
-    //static Accommodation[] accommodations = new Accommodation[0];
 
     // Array size 0
     static Transportation[] transportations = new Transportation[0];
@@ -25,6 +29,12 @@ public class SmartTravelDriver {
 
     static Trip[] trips = new Trip[0];
 
+    /**
+     * SmartTravelDriver
+     *
+     * Main driver class for Smart Travel Planner application.
+     * Handles user interaction via menu or predefined scenario.
+     */
     public static void main(String[] args) throws IOException {
 
         System.out.println();
@@ -208,6 +218,7 @@ public class SmartTravelDriver {
 
     }
 
+    // --- Main Menu ---
     public static int mainMenu() {
 
         int choice;
@@ -230,6 +241,7 @@ public class SmartTravelDriver {
         return choice;
     }
 
+    // --- Additional Operations ---
     public static void mostExpensiveTrip(Trip[] trips) {
 
         if (trips.length != 0) {
@@ -251,6 +263,9 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * Creates a deep copy of a transportation array.
+     */
     public static Transportation[] copyTransportationArray(Transportation[] original) {
 
         Transportation[] copy = new Transportation[original.length];
@@ -269,6 +284,9 @@ public class SmartTravelDriver {
 
     }
 
+    /**
+     * Creates a deep copy of an accommodation array.
+     */
     public static Accommodation[] copyAccommodationArray(Accommodation[] original) {
 
         Accommodation[] copy = new Accommodation[original.length];
@@ -284,6 +302,16 @@ public class SmartTravelDriver {
         return copy;
 
     }
+
+    /**
+     * clientManagement(): Menu specifically for managing clients.
+     * Options:
+     * 1 - Add a client
+     * 2 - Edit a client
+     * 3 - Delete a client
+     * 4 - Display all clients
+     * 0 - Return to main menu
+     */
 
     public static void clientManagement() {
         int choice;
@@ -322,6 +350,15 @@ public class SmartTravelDriver {
             }
         }
     }
+
+    /**
+     * additionalOperations(): Menu for extra operations outside the main CRUD menus.
+     * Options:
+     * 1 - Display the most expensive trip
+     * 2 - Calculate and display total cost of a specific trip
+     * 3 - Create a deep copy of the transportation array
+     * 4 - Create a deep copy of the accommodation array
+     */
 
     public static void additionalOperations() {
 
@@ -375,6 +412,10 @@ public class SmartTravelDriver {
         } while (choice < 0 || choice > 4);
     }
 
+    /**
+     * addClient(): Prompts user for client information and adds it to the client array.
+     */
+
     public static void addClient() {
         System.out.print("Enter client First Name: ");
         String firstName = sc.nextLine();
@@ -396,6 +437,10 @@ public class SmartTravelDriver {
         clientProcess[clientProcess.length - 1] = client;
         clients = clientProcess;
     }
+
+    /**
+     * editClient(): Allows user to select a client and update their information.
+     */
 
     public static void editClient() {
         if (clients.length == 0) {
@@ -430,6 +475,10 @@ public class SmartTravelDriver {
 
         }
     }
+    /**
+     * deleteClient(): Removes a client selected by the user from the array.
+     * Rebuilds the array with one fewer element.
+     */
 
     public static void deleteClient() {
         if (clients.length == 0) {
@@ -468,6 +517,10 @@ public class SmartTravelDriver {
             }
         }
     }
+    /**
+     * displayClients(): Prints all clients with their index, ID, and full name.
+     * Used in menus to let the user select a client by index.
+     */
 
     public static void displayClients() {
         if (clients.length != 0) {
@@ -479,6 +532,12 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * totalCostOfATrip(Trip[] trips):
+     * Allows the user to select a trip and calculates its total cost.
+     * The cost is calculated using the Trip object's calculateTotalCost() method.
+     * If no trips exist, informs the user.
+     */
     public static void totalCostOfATrip(Trip[] trips) {
         if (trips.length == 0) {
             System.out.println("There is no trip stored.");
@@ -496,7 +555,10 @@ public class SmartTravelDriver {
         }
     }
 
-
+    /**
+     * tripManagement(): Displays the trip management menu.
+     * Options allow creating, editing, canceling, listing trips, or returning to main menu.
+     */
     public static void tripManagement() {
         int choice;
         do {
@@ -542,7 +604,12 @@ public class SmartTravelDriver {
 
 
     }
-
+    /**
+     * createTrip(): Guides the user to create a new Trip.
+     * Prompts for destination, duration, base price, and optionally associates
+     * a client, accommodation, and transportation.
+     * Adds the trip to the trips array.
+     */
     public static void createTrip() {
 
         Accommodation accomodation = null;
@@ -628,6 +695,10 @@ public class SmartTravelDriver {
         System.out.println("New trip created successfully");
     }
 
+    /**
+     * editTripInformation(): Allows user to modify an existing trip.
+     * Updates destination, duration, price, accommodation, and transportation.
+     */
     public static void editTripInformation() {
         if (trips.length != 0) {
             int choice;
@@ -694,6 +765,10 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * cancelTrip(): Deletes a selected trip.
+     * Rebuilds trips array without the removed trip.
+     */
     public static void cancelTrip() {
         if (trips.length != 0) {
             int choice;
@@ -726,6 +801,9 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * listAllTrips(): Prints all trips in the system.
+     */
     public static void listAllTrips() {
         if (trips.length != 0) {
             for (Trip trip: trips) {
@@ -736,6 +814,9 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * listAllTripsByClient(): Lists all trips associated with a chosen client.
+     */
     public static void listAllTripsByClient() {
         if (trips.length != 0) {
             int choice;
@@ -759,6 +840,10 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * transportationManagement(): Displays transportation menu.
+     * Allows adding, removing, listing transportation options or returning to main menu.
+     */
     public static void transportationManagement() {
 
         int choice;
@@ -794,6 +879,10 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * addTransportation(): Adds a new transportation (Flight, Train, Bus)
+     * Prompts for type-specific information and adds it to transportations array.
+     */
     public static void addTransportation() {
 
         int type;
@@ -855,6 +944,9 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * listTransportationOptions(): Lists all registered transportation, grouped by type.
+     */
     public static void listTransportationOptions() {
 
         if (transportations.length == 0) {
@@ -878,6 +970,9 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * removeTransportation(): Removes a selected transportation option from the array.
+     */
     public static void removeTransportation() {
 
         if (transportations.length == 0) {
@@ -909,7 +1004,10 @@ public class SmartTravelDriver {
         System.out.println("Transportation removed successfully.");
     }
 
-
+    /**
+     * accommodationManagement(): Displays accommodation menu.
+     * Allows adding, removing, listing accommodations or returning to main menu.
+     */
     public static void accommodationManagement() {
         int choice;
         do {
@@ -944,6 +1042,10 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * addAccommodation(): Adds a Hotel or Hostel.
+     * Prompts for type-specific info and appends to accommodations array.
+     */
     public static void addAccommodation() {
 
         int type;
@@ -991,6 +1093,9 @@ public class SmartTravelDriver {
         }
     }
 
+    /**
+     * removeAccommodation(): Deletes selected accommodation from the array.
+     */
     public static void removeAccommodation() {
 
         if (accommodations.length == 0) {
@@ -1024,6 +1129,9 @@ public class SmartTravelDriver {
 
     }
 
+    /**
+     * listAccommodationByType(): Lists all accommodations grouped by type (Hotel/Hostel)
+     */
     public static void listAccommodationByType() {
 
         if (accommodations.length != 0) {

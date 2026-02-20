@@ -1,8 +1,11 @@
 package travel;
 
 import client.Client;
-import com.sun.jdi.connect.Transport;
-
+/**
+ * The Trip class represents a travel booking.
+ * It contains information about the destination, duration,
+ * pricing, associated client, accommodation, and transportation.
+ */
 public class Trip {
 
     private String tripID;
@@ -16,6 +19,10 @@ public class Trip {
 
     private static int tripIdCounter = 2001;
 
+    /**
+     * Main constructor.
+     * Creates a fully initialized Trip object.
+     */
     public Trip(String destination, int durationInDays, double basePrice, Client client, Accommodation accommodation, Transportation transportation) {
         this.tripID = "T" + tripIdCounter++;
         this.destination = destination;
@@ -26,6 +33,10 @@ public class Trip {
         this.transportation = transportation;
     }
 
+    /**
+     * Default constructor.
+     * Creates an empty trip with default values.
+     */
     public Trip () {
         this.tripID = "T" + tripIdCounter++;
         this.destination = "";
@@ -35,6 +46,11 @@ public class Trip {
         this.transportation = null;
     }
 
+    /**
+     * Copy constructor.
+     * Creates a new Trip based on another Trip object.
+     * A new unique ID is generated.
+     */
 
     public Trip(Trip trip) {
         this.tripID = "T" + tripIdCounter++;
@@ -43,6 +59,11 @@ public class Trip {
         this.basePrice = trip.getBasePrice();
         this.clientAssociated = trip.getClientAssociated();
     }
+
+    /**
+     * Calculates the total cost of the trip.
+     * Includes base price, accommodation cost, and transportation cost.
+     */
 
     public double calculateTotalCost() {
         double cost = 0;
@@ -59,6 +80,10 @@ public class Trip {
         return cost;
     }
 
+    /**
+     * Returns a formatted string representation of the Trip object.
+     */
+
     @Override
     public String toString() {
 
@@ -69,8 +94,10 @@ public class Trip {
                 ", BasePrice: " + basePrice + "$" +
                 ", ClientAssociated: " + clientAssociated.getClientId();
 
+        // Add transportation info if not null
         if (transportation != null)
             tripText += ", Transportation: " + transportation.getTransportId();
+        // Add transportation info if not null
         if (accommodation != null)
             tripText += ", Accommodation: " + accommodation.getAccommodationId();
 
@@ -78,6 +105,8 @@ public class Trip {
 
         return tripText;
     }
+
+    // Getters and Setters
 
     public String getTripId() {
         return tripID;
